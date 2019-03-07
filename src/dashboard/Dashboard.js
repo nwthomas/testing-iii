@@ -1,37 +1,35 @@
-import React from 'react';
+import React from "react";
+import { connect } from "react-redux";
+import { toggleLocked, toggleClosed } from "../store/actions/index";
 
-import Display from '../display/Display';
-import Controls from '../controls/Controls';
+import Display from "../display/Display";
+import Controls from "../controls/Controls";
 
-class Dashboard extends React.Component {
-  state = {
-    locked: false,
-    closed: false,
-  };
+const Dashboard = props => {
+  return (
+    <>
+      <Display locked={props.locked} closed={props.closed} />
+      <Controls
+        locked={props.locked}
+        closed={props.closed}
+        toggleLocked={props.toggleLocked}
+        toggleClosed={props.toggleClosed}
+      />
+    </>
+  );
+};
 
-  render() {
-    const { closed, locked } = this.state;
+const mapStateToProps = state => ({
+  locked: state.reducer.locked,
+  closed: state.reducer.closed
+});
 
-    return (
-      <>
-        <Display locked={locked} closed={closed} />
-        <Controls
-          locked={locked}
-          closed={closed}
-          toggleLocked={this.toggleLocked}
-          toggleClosed={this.toggleClosed}
-        />
-      </>
-    );
-  }
+const mapActionsToProps = {
+  toggleLocked,
+  toggleClosed
+};
 
-  toggleLocked = () => {
-    this.setState(prev => ({ locked: !prev.locked }));
-  };
-
-  toggleClosed = () => {
-    this.setState(prev => ({ closed: !prev.closed }));
-  };
-}
-
-export default Dashboard;
+export default connect(
+  mapStateToProps,
+  mapActionsToProps
+)(Dashboard);
